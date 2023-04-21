@@ -1,0 +1,52 @@
+{
+  "slogan1": "Food ordering system",
+  "slogan1_1": "From",
+  "slogan1_2": "Allgrow Labo",
+  "slogan2": "Order lunch ( 10:00 - 10:45 )",
+  "slogan2_2": "Pay via QR code Momo or cash",
+  "order_now": "Order now",
+
+  "order_me": "My order",
+  "name": "Recipient's name",
+  "payment_method": "Payment method",
+  "food_list": "Order List",
+  "total_price": "Total price",
+  "status": "Status",
+  "phone_number": "Phone number",
+  "status_wait": "Waiting for confirmation",
+  "confirmed": "Confirmed",
+  "status_wait_delivery": "Wait for shipping",
+  "status_delivered": "In stock",
+  "status_completed": "Completed",
+
+  "menu1": "Home",
+  "menu2": "My Cart",
+  "menu3": "My Order",
+
+  "yourcart": "My cart",
+  "product": "Product",
+  "qty": "Quantity",
+  "price": "Price",
+  "total": "Total price",
+  "delete_cart": "Delete cart",
+  "pay": "Payment",
+  "paid": "Please scan the payment code before ordering",
+  "choose_payment": "Choose payment",
+  "pay_by_momo": "Pay by Momo",
+  "pay_by_cash": "Pay by cash",
+  "back": "Back",
+  "confirm": "Confirm",
+
+  "num_bought": "Quantity sold",
+  "contact": "Contact info",
+
+  "notification": {
+    "title": "Notifications",
+    "just_now": "Just now",
+    "text": "Add cart successfully!"
+  },
+  "cart": {
+    "title": "Add to cart"
+  },
+  "empty": "There are no products in the cart !!!"
+}

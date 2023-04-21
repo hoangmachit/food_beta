@@ -1,0 +1,52 @@
+{
+  "slogan1": "Hệ thống đặt thức ăn",
+  "slogan1_1": "đến từ",
+  "slogan1_2": "Allgrow Labo",
+  "slogan2": "Đặt cơm trưa ( 10:00 - 10:45 )",
+  "slogan2_2": "Thanh toán qua mã QR Momo hoặc tiền mặt",
+  "order_now": "Đặt ngay bây giờ",
+
+  "order_me": "Đặt hàng của tôi",
+  "name": "Tên người thanh toán",
+  "payment_method": "Phương thức thanh toán",
+  "food_list": "Món ăn",
+  "total_price": "Tổng tiền",
+  "status": "Trạng thái",
+  "phone_number": "Số điện thoại",
+  "status_wait": "Chờ xác nhận",
+  "confirmed": "Đã xác nhận",
+  "status_wait_delivery": "Chờ nhận hàng",
+  "status_delivered": "Đã có hàng",
+  "status_completed": "Đã hoàn thành",
+
+  "menu1": "Trang chủ",
+  "menu2": "Giỏ hàng",
+  "menu3": "Đơn của tôi",
+
+  "yourcart": "Giỏ hàng của bạn",
+  "product": "Sản phẩm",
+  "qty": "Số lượng",
+  "price": "Giá tiền",
+  "total": "Tổng cộng",
+  "delete_cart": "Xóa giỏ hàng",
+  "pay": "Thanh toán",
+  "paid": "Vui lòng quét mã thanh toán trước khi đặt hàng",
+  "choose_payment": "Lựa chọn thanh toán",
+  "pay_by_momo": "Thanh toán bằng Momo",
+  "pay_by_cash": "Thanh toán bằng tiền mặt",
+  "back": "Quay lại",
+  "confirm": "Đặt hàng",
+
+  "num_bought": "Đã bán",
+  "contact": "Thông tin liên hệ",
+
+  "notification": {
+    "title": "Thông báo",
+    "just_now": "Vừa xong",
+    "text": "Thêm giỏ hàng thành công!"
+  },
+  "cart": {
+    "title": "Thêm giỏ hàng"
+  },
+  "empty": "Không có sản phẩm nào trong giỏ hàng !!!"
+}

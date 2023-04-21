@@ -1,0 +1,52 @@
+{
+  "slogan1": "食品注文システム",
+  "slogan1_1": "から",
+  "slogan1_2": "Allgrow Labo",
+  "slogan2": "オーダーランチ（10:00～10:45）",
+  "slogan2_2": "QRコードMomoまたは現金でお支払い",
+  "order_now": "今予約する",
+
+  "order_me": "私の注文",
+  "name": "受取人の氏名",
+  "payment_method": "支払い方法",
+  "food_list": "皿",
+  "total_price": "合計金額",
+  "status": "状態",
+  "phone_number": "電話番号",
+  "status_wait": "確認を待ちます",
+  "confirmed": "確認済み",
+  "status_wait_delivery": "発送待ち",
+  "status_delivered": "メイド品",
+  "status_completed": "達成した",
+
+  "menu1": "ホームページ",
+  "menu2": "カート",
+  "menu3": "私の注文",
+
+  "yourcart": "私のショッピングカート",
+  "product": "製品",
+  "qty": "額",
+  "price": "価格",
+  "total": "合計",
+  "delete_cart": "カートをクリア",
+  "pay": "支払い",
+  "paid": "注文前に支払いコードをスキャンしてください",
+  "choose_payment": "お支払い方法を選択",
+  "pay_by_momo": "Momo .アプリで支払う",
+  "pay_by_cash": "現金でのお支払い",
+  "back": "戻る",
+  "confirm": "注文",
+
+  "num_bought": "販売数量",
+  "contact": "連絡先情報",
+
+  "notification": {
+    "title": "通知",
+    "just_now": "たった今",
+    "text": "カートに正常に追加されました!"
+  },
+  "cart": {
+    "title": "カートに追加"
+  },
+  "empty": "カートに商品がありません !!!"
+}
