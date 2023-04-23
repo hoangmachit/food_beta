@@ -48,5 +48,10 @@
   "cart": {
     "title": "Thêm giỏ hàng"
   },
-  "empty": "Không có sản phẩm nào trong giỏ hàng !!!"
+  "empty": "Không có sản phẩm nào trong giỏ hàng !!!",
+  "footer": {
+    "company_name": "Công ty TNHH Allgrow-labo ALLGROW Inc.",
+    "address": "Tầng 4, toà nhà An Phú Plaza, 117-119 Lý Chính Thắng, P. Võ Thị Sáu, Q.3, TP Hồ Chí Minh, Việt Nam",
+    "facebook": "Contact Support Team"
+  }
 }

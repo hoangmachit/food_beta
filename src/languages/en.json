@@ -48,5 +48,10 @@
   "cart": {
     "title": "Add to cart"
   },
-  "empty": "There are no products in the cart !!!"
+  "empty": "There are no products in the cart !!!",
+  "footer": {
+    "company_name": "Allgrow-labo Co., Ltd. ALLGROW Inc.",
+    "address": "4th Floor, An Phu Plaza Building, 117-119 Ly Chinh Thang, Vo Thi Sau Ward, District 3, Ho Chi Minh City, Vietnam",
+    "facebook": "Contact Support Team"
+  }
 }

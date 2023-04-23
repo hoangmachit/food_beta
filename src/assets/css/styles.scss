@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap");
-
 *,
 :before,
 :after {
@@ -17,7 +15,7 @@
 }
 
 body {
-  font-family: "Roboto";
+  font-family: "Mulish", sans-serif;
 }
 
 nav {
@@ -31,7 +29,6 @@ nav {
   line-height: 80px;
   padding: 0 70px;
   font-weight: 600;
-  font-family: "Poppins", sans-serif;
   text-decoration: none !important;
   background: transparent !important;
 }
@@ -54,7 +51,6 @@ nav ul li a {
   padding: 7px 13px;
   border-radius: 3px;
   /* text-transform: uppercase; */
-  font-family: "Poppins", sans-serif;
 }
 
 .svg {
@@ -241,14 +237,14 @@ input.cart_input_quanlity {
       -webkit-line-clamp: 1;
     }
   }
-  .product__price{
-    span{
+  .product__price {
+    span {
       font-weight: bold;
       font-size: 1rem;
       color: black;
     }
   }
-  .product__description{
+  .product__description {
     -webkit-line-clamp: 3;
     line-height: 1.4;
   }
@@ -491,14 +487,14 @@ input.cart_input_quanlity {
   }
 }
 /** Payment */
-#payment_form{
+#payment_form {
   display: flex;
   justify-content: space-between;
   flex-direction: row-reverse;
-  .choose_box{
+  .choose_box {
     width: 48%;
   }
-} 
+}
 
 @media (max-width: 952px) {
   .logo {
@@ -553,7 +549,7 @@ input.cart_input_quanlity {
     color: #0082e6;
   }
 
-  #check:checked~ul {
+  #check:checked ~ ul {
     left: 0;
   }
 }
@@ -600,15 +596,15 @@ input.cart_input_quanlity {
     font-size: 1rem;
   }
   /** Payment */
-  #payment_form{
+  #payment_form {
     flex-wrap: wrap;
-    .choose_box{
+    .choose_box {
       width: 100%;
-      &:nth-child(2){
+      &:nth-child(2) {
         margin-top: 0.75rem;
       }
     }
-  } 
+  }
 }
 
 @media (max-width: 560px) {
@@ -658,4 +654,7 @@ input.cart_input_quanlity {
   .cart_info_box .font-weight-bold {
     font-size: 16px !important;
   }
+}
+.payment_nama,.payment_sacom{
+  margin-right: 10px;
 }

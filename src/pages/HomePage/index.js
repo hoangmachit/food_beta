@@ -11,33 +11,67 @@ import translate_file_ja from "../../languages/ja.json";
 import icon_japan_lang from "../../assets/img/icon_japan_lang.png";
 // type
 import { storedLanguage, VI, EN, JA } from "../../types/language";
+import { storedPayment, MOMO, CASH, TypePayment } from "../../types/payment";
 
 // components
 import ListFood from "../../components/ListFood";
 import Loading from "../../components/Loading";
+import Toast from "../../components/Toast";
 import { ModalCart, ModalMyOrder } from "../../components/Modal";
 
 function HomePage() {
   const [modal_cart, setModalCart] = useState(false);
   const [modal_order, setModalOrder] = useState(false);
   const [content, setContent] = useState({});
-  const [scrolling, setScrolling] = useState(false);
+  const [scrolling] = useState(false);
   const [configs, setConfigs] = useState([]);
   const [products, setProducts] = useState({});
   const [orders, setOrders] = useState({});
   const [language, setLanguage] = useState(storedLanguage);
   const scollToRef = useRef(null);
-  const [page, setPage] = useState('home');
+  const [page, setPage] = useState("home");
   const [loading, setLoading] = useState(false);
-  const [total_qty, setTotalQty] = useState(localStorage.getItem("total_qty")
-    ? localStorage.getItem("total_qty")
-    : 0);
-  const [cart, setCart] = useState(localStorage.getItem("cart")
-    ? JSON.parse(localStorage.getItem("cart"))
-    : [])
-  const [total_price, setTotalPrice] = useState(localStorage.getItem("total_price")
-    ? localStorage.getItem("total_price")
-    : 0);
+  const defaulToast = {
+    status: false,
+    body: null,
+    header: null,
+    time: null,
+  };
+  const [toast, setToast] = useState(defaulToast);
+  const [step, setStep] = useState({
+    one: true,
+    two: false,
+    three: false,
+  });
+  const handleStep = (one, two, three) => {
+    setStep({
+      one,
+      two,
+      three,
+    });
+  };
+
+  const [order_payment, setOrderPayment] = useState(storedPayment);
+  const handleOrderPayment = (payment_name) => {
+    let real_payment = payment_name;
+    if (!(payment_name && TypePayment.includes(payment_name))) {
+      real_payment = CASH;
+    }
+    setOrderPayment(real_payment);
+    localStorage.setItem("order_payment", real_payment);
+  };
+  const [total_qty, setTotalQty] = useState(
+    localStorage.getItem("total_qty") ? localStorage.getItem("total_qty") : 0
+  );
+
+  const [cart, setCart] = useState(
+    localStorage.getItem("cart") ? JSON.parse(localStorage.getItem("cart")) : []
+  );
+  const [total_price, setTotalPrice] = useState(
+    localStorage.getItem("total_price")
+      ? localStorage.getItem("total_price")
+      : 0
+  );
   const makeToken = (length) => {
     var result = "";
     var characters =
@@ -48,29 +82,55 @@ function HomePage() {
     }
     return result;
   };
-  const [token_id, setTokenId] = useState(localStorage.getItem("token_id")
-    ? localStorage.getItem("token_id")
-    : makeToken(30));
-  const [user_name, setUserName] = useState(localStorage.getItem("user_name")
-    ? localStorage.getItem("user_name")
-    : "");
-  const [phone_number, setPhoneNumber] = useState(localStorage.getItem("phone_number")
-    ? localStorage.getItem("phone_number")
-    : "");
+  const [token_id, setTokenId] = useState(
+    localStorage.getItem("token_id")
+      ? localStorage.getItem("token_id")
+      : makeToken(30)
+  );
+  const [user_name, setUserName] = useState(
+    localStorage.getItem("user_name") ? localStorage.getItem("user_name") : ""
+  );
+  const [phone_number, setPhoneNumber] = useState(
+    localStorage.getItem("phone_number")
+      ? localStorage.getItem("phone_number")
+      : ""
+  );
+  const handleUserName = (evt) => {
+    localStorage.setItem("user_name", evt.target.value);
+    setUserName(evt.target.value);
+  };
+  const handlePhoneNumber = (evt) => {
+    localStorage.setItem("phone_number", evt.target.value);
+    setPhoneNumber(evt.target.value);
+  };
   const [img_momo, setImgMomo] = useState("");
+
   useEffect(() => {
+    const createQrMomo = async (configs) => {
+      if (!configs[0]) return;
+      const url =
+        process.env.REACT_APP_API_QR_ENDPOINT +
+        "/?size=348x348&data=2|99|" +
+        configs[1].value +
+        "|" +
+        configs[2].value +
+        "|" +
+        configs[3].value +
+        "|0|0|";
+      await setImgMomo(url);
+    };
     const getConfig = async () => {
       await axios
         .post(process.env.REACT_APP_API_ENDPOINT + `/configs`)
         .then((res) => {
           const { data } = res;
-          setConfigs(data);
+          setConfigs(data.data);
+          createQrMomo(data.data);
         })
         .catch((error) => console.log(error));
-    }
+    };
     getConfig();
   }, []);
-
   useEffect(() => {
     const getProducts = async () => {
       await axios
@@ -80,14 +140,14 @@ function HomePage() {
           setProducts(data.data);
         })
         .catch((error) => console.log(error));
-    }
+    };
     getProducts();
   }, []);
 
   useEffect(() => {
     handleLanguage(language);
-  }, [language])
-  const handleLanguage = language => {
+  }, [language]);
+  const handleLanguage = (language) => {
     switch (language) {
       case VI:
         setContent(translate_file_vi);
@@ -103,60 +163,160 @@ function HomePage() {
     }
     setLanguage(language);
     localStorage.setItem("language", language);
-  }
+  };
+
+  useEffect(() => {
+    const getOrder = async () => {
+      const data = {
+        token_id: token_id,
+      };
+      await axios
+        .post(process.env.REACT_APP_API_ENDPOINT + `/order/list`, data)
+        .then((res) => {
+          const { data } = res;
+          setOrders(data.data);
+        })
+        .catch((error) => console.log(error));
+    };
+    getOrder();
+  }, []);
+
   const handleModalCart = () => {
     setModalCart(!modal_cart);
-  }
+  };
   const handleModalMyOrder = () => {
     setModalOrder(!modal_order);
-  }
-  const handlePage = page_name => {
+  };
+  const handlePage = (page_name) => {
     setPage(page_name);
-  }
-  const payBill = () => {
-    console.log("payBill");
-  }
+  };
+
   const clearCart = () => {
-    console.log("clearCart");
-  }
-  const clearCartItem = () => {
-    console.log("clearCartItems");
-  }
+    localStorage.setItem("cart", []);
+    setCart([]);
+    localStorage.setItem("total_qty", 0);
+    setTotalQty(0);
+    localStorage.setItem("total_price", 0);
+    setTotalPrice(0);
+  };
+  const removeCartItem = (product_id) => {
+    const itemToRemove = cart.find((item) => item.id === product_id);
+    if (itemToRemove) {
+      const newCart = cart.filter((item) => item.id !== product_id);
+      const newTotalQty = parseInt(total_qty) - itemToRemove.quantity;
+      const newTotalPrice =
+        parseInt(total_price) - itemToRemove.price * itemToRemove.quantity;
+      setCart(newCart);
+      setTotalQty(newTotalQty);
+      setTotalPrice(newTotalPrice);
+      localStorage.setItem("cart", JSON.stringify(newCart));
+      localStorage.setItem("total_qty", newTotalQty);
+      localStorage.setItem("total_price", newTotalPrice);
+    }
+  };
   const menuActive = "active  text-white";
   const handleLoading = (loading) => {
     setLoading(loading);
-  }
+  };
   const addCart = (product_id) => {
-    // handleLoading(true);
-    //this.hideToast();
-    var cartCurrent = cart;
-    var exist = false;
-    if (cartCurrent) {
-      cartCurrent.map((item) => {
-        if (item) {
-          if (parseInt(item.id) === product_id) {
-            item.qty++;
-            exist = true;
-          }
-        }
-      });
+    handleLoading(true);
+    const product = products.find((p) => p.id === product_id);
+    const existingCartItem = cart.find((item) => item.id === product_id);
+    const newCartItem = {
+      ...product,
+      quantity: existingCartItem ? existingCartItem.quantity + 1 : 1,
+    };
+    const newCart = existingCartItem
+      ? cart.map((item) => (item.id === product_id ? newCartItem : item))
+      : [...cart, newCartItem];
+    const newTotalQty = parseInt(total_qty) + 1;
+    const newTotalPrice = parseInt(total_price) + parseInt(newCartItem.price);
+    setCart(newCart);
+    setTotalQty(newTotalQty);
+    setTotalPrice(newTotalPrice);
+    localStorage.setItem("cart", JSON.stringify(newCart));
+    localStorage.setItem("total_qty", newTotalQty);
+    localStorage.setItem("total_price", newTotalPrice);
+    setTimeout(() => {
+      handleLoading(false);
+      const newDefault = {
+        ...defaulToast,
+        status: true,
+        body: "Add to cart success !!!",
+        time: "just now",
+        header: "Add to cart",
+      };
+      setToast(newDefault);
+    }, 1000);
+  };
+  const hideToast = () => {
+    setToast(defaulToast);
+  };
+  const payBill = async () => {
+    if (!user_name) {
+      alert("You need add user_name");
+      return false;
     }
-    if (!exist) {
-      var item = [{ id: product_id, qty: 1 }];
-      cartCurrent = [...cartCurrent, ...item];
+    if (!phone_number) {
+      alert("You need add phone_number");
+      return false;
     }
-    console.log('cartCurrent', cartCurrent);
-    // cart = this.renewCart(cart);
-    // this.setState({ cart });
-    // localStorage.setItem("cart", JSON.stringify(cart));
-    // this.setState({ loading: false });
-    // this.showToast();
-    // this.resetAll();
-  }
+    if (cart.length > 0) {
+      const data = {
+        token_id: token_id,
+        order_detail: JSON.stringify(cart),
+        total_price: total_price,
+        user_name: localStorage.getItem("user_name"),
+        phone_number: localStorage.getItem("phone_number"),
+        order_payment: order_payment,
+      };
+      // await axios
+      //   .post(process.env.REACT_APP_API_ENDPOINT + `/order/create`, data)
+      //   .then((res) => {
+      //     const response = res.data;
+      //     if (response.success) {
+      //       clearCart();
+      //       localStorage.setItem("token_id", token_id);
+      //       const newDefault = {
+      //         ...defaulToast,
+      //         status: true,
+      //         body: "Add to cart success !!!",
+      //         time: "just now",
+      //         header: "Add to cart",
+      //       };
+      //       setToast(newDefault);
+      //     }
+      //   })
+      //   .catch((error) => console.log(error));
+      handleLoading(true);
+      await axios
+        .get(`http://localhost/haweb.vn/wp-json/wp/v2/categories`, data)
+        .then((res) => {
+          handleLoading(false);
+          setTokenId(token_id);
+          handlePage("home");
+          clearCart();
+          handleStep(true, false, false);
+          setTimeout(() => {
+            handleStep(false, false, false);
+            handleModalCart();
+          }, 3000);
+        })
+        .catch((error) => console.log(error));
+    }
+  };
   return (
     <>
       <div className="HomePage">
         {loading && <Loading loading={loading} />}
+        {toast.status && (
+          <Toast
+            header={toast.header}
+            body={toast.body}
+            time={toast.time}
+            hideToast={hideToast}
+          />
+        )}
         {/* Header menu */}
         <div className="container-fluid p-0" id="style1">
           <p id="style2">
@@ -171,24 +331,19 @@ function HomePage() {
             <br></br>
             {content.slogan2_2}
           </p>
-          {products &&
-            configs[6] &&
-            configs[6].value === "on" && (
-              <button
-                id="style4"
-                onClick={() => {
-                  scollToRef.current.scrollIntoView({
-                    behavior: "smooth",
-                  });
-                }}
-              >
-                {content.order_now}
-              </button>
-            )}
-          <nav
-            id="menu"
-            className={scrolling ? "scroll_event_Add_class" : ""}
-          >
+          {products && configs[6] && configs[6].value === "on" && (
+            <button
+              id="style4"
+              onClick={() => {
+                scollToRef.current.scrollIntoView({
+                  behavior: "smooth",
+                });
+              }}
+            >
+              {content.order_now}
+            </button>
+          )}
+          <nav id="menu" className={scrolling ? "scroll_event_Add_class" : ""}>
             <input type="checkbox" id="check"></input>
             <label htmlFor="check" className="checkbtn">
               <span className="menu-bar"></span>
@@ -200,10 +355,8 @@ function HomePage() {
               <li>
                 <a
                   href={"#homepage"}
-                  className={
-                    page === 'home' ? menuActive : null
-                  }
-                  onClick={() => handlePage('home')}
+                  className={page === "home" ? menuActive : null}
+                  onClick={() => handlePage("home")}
                 >
                   {content.menu1}
                 </a>
@@ -212,11 +365,10 @@ function HomePage() {
                 <a
                   style={{ position: "relative" }}
                   href={"#cart"}
-                  className={
-                    page === 'cart' ? menuActive : null
-                  }
+                  className={page === "cart" ? menuActive : null}
                   onClick={() => {
-                    handlePage('cart');
+                    handlePage("cart");
+                    handleStep(true, false, false);
                     handleModalCart();
                   }}
                 >
@@ -229,11 +381,9 @@ function HomePage() {
               <li>
                 <a
                   href={"#myorder"}
-                  className={
-                    page === 'order' ? menuActive : null
-                  }
+                  className={page === "order" ? menuActive : null}
                   onClick={() => {
-                    handlePage('order');
+                    handlePage("order");
                     handleModalMyOrder();
                   }}
                 >
@@ -243,9 +393,7 @@ function HomePage() {
               <li>
                 <a
                   id="menu_login_button"
-                  className={
-                    language === JA ? menuActive : null
-                  }
+                  className={language === JA ? menuActive : null}
                   href={"#ja"}
                 >
                   <img
@@ -260,9 +408,7 @@ function HomePage() {
                 </a>
                 <a
                   id="menu_login_button"
-                  className={
-                    language === VI ? menuActive : null
-                  }
+                  className={language === VI ? menuActive : null}
                   href={"#vi"}
                 >
                   <img
@@ -277,9 +423,7 @@ function HomePage() {
                 </a>
                 <a
                   id="menu_login_button"
-                  className={
-                    language === EN ? menuActive : null
-                  }
+                  className={language === EN ? menuActive : null}
                   href={"#en"}
                 >
                   <img
@@ -315,12 +459,22 @@ function HomePage() {
           total_price={total_price}
           page={page}
           configs={configs}
+          order_payment={order_payment}
+          paymentMethod={{ MOMO, CASH }}
+          handleOrderPayment={handleOrderPayment}
           onHide={() => handleModalCart()}
           payBill={payBill}
           clearCart={clearCart}
-          clearCartItem={clearCartItem}
+          removeCartItem={removeCartItem}
           img_momo={img_momo}
           show={modal_cart}
+          handleModalCart={handleModalCart}
+          step={step}
+          handleStep={handleStep}
+          user_name={user_name}
+          handleUserName={handleUserName}
+          phone_number={phone_number}
+          handlePhoneNumber={handlePhoneNumber}
         ></ModalCart>
         {/* Modal Cart */}
         {/* List Food */}
@@ -344,7 +498,7 @@ function HomePage() {
         </div>
         {/* List Food */}
       </div>
-      <Footer />
+      <Footer content={content} />
     </>
   );
 }
