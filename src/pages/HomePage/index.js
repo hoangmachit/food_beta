@@ -23,7 +23,7 @@ function HomePage() {
   const [modal_cart, setModalCart] = useState(false);
   const [modal_order, setModalOrder] = useState(false);
   const [content, setContent] = useState({});
-  const [scrolling] = useState(false);
+  const [scrolling, setScrolling] = useState(false);
   const [configs, setConfigs] = useState([]);
   const [products, setProducts] = useState({});
   const [orders, setOrders] = useState({});
@@ -181,6 +181,20 @@ function HomePage() {
     getOrder();
   }, []);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY === 0) {
+        setScrolling(false);
+      } else if (window.scrollY !== 0) {
+        if (!scrolling) setScrolling(true);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   const handleModalCart = () => {
     setModalCart(!modal_cart);
   };
@@ -203,9 +217,9 @@ function HomePage() {
     const itemToRemove = cart.find((item) => item.id === product_id);
     if (itemToRemove) {
       const newCart = cart.filter((item) => item.id !== product_id);
-      const newTotalQty = parseInt(total_qty) - itemToRemove.quantity;
+      const newTotalQty = parseInt(total_qty) - itemToRemove.qty;
       const newTotalPrice =
-        parseInt(total_price) - itemToRemove.price * itemToRemove.quantity;
+        parseInt(total_price) - itemToRemove.price * itemToRemove.qty;
       setCart(newCart);
       setTotalQty(newTotalQty);
       setTotalPrice(newTotalPrice);
@@ -224,7 +238,7 @@ function HomePage() {
     const existingCartItem = cart.find((item) => item.id === product_id);
     const newCartItem = {
       ...product,
-      quantity: existingCartItem ? existingCartItem.quantity + 1 : 1,
+      qty: existingCartItem ? existingCartItem.qty + 1 : 1,
     };
     const newCart = existingCartItem
       ? cart.map((item) => (item.id === product_id ? newCartItem : item))
@@ -242,9 +256,9 @@ function HomePage() {
       const newDefault = {
         ...defaulToast,
         status: true,
-        body: "Add to cart success !!!",
-        time: "just now",
-        header: "Add to cart",
+        body: content.notification?.text,
+        time: content.notification?.just_now,
+        header: content.notification?.title,
       };
       setToast(newDefault);
     }, 1000);
