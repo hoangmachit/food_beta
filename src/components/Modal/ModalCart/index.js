@@ -25,6 +25,7 @@ export default function ModalCart(props) {
     handleUserName,
     phone_number,
     handlePhoneNumber,
+    goToMyOrder,
   } = props;
   return (
     <Modal
@@ -92,7 +93,9 @@ export default function ModalCart(props) {
                                       <div className="cart_img_box float-left">
                                         <img
                                           src={
-                                            item.image ? item.image : noimage
+                                            item.thumbnail
+                                              ? item.thumbnail
+                                              : noimage
                                           }
                                           width="100%"
                                           height="100%"
@@ -107,7 +110,7 @@ export default function ModalCart(props) {
                                           {item.name}
                                         </p>
                                         <p style={{ fontSize: "85%" }}>
-                                          {item.description}
+                                          {item.desc}
                                         </p>
                                       </div>
                                     </div>
@@ -360,18 +363,17 @@ export default function ModalCart(props) {
         {step && step.three && (
           <>
             <div className="jumbotron" style={{ margin: 0 }}>
-              <h2 className="text-center">YOUR ORDER HAS BEEN RECEIVED</h2>
-              <h3 className="text-center">
-                Thank you for your payment, it’s processing
-              </h3>
-              <p className="text-center">Your order # is: 100000023</p>
-              <p className="text-center">
-                You will receive an order confirmation email with details of
-                your order and a link to track your process.
-              </p>
+              <h2 className="text-center thank01">{content.thank.thank01}</h2>
+              <h3 className="text-center thank02">{content.thank.thank02}</h3>
+              <p className="text-center thank03">{content.thank.thank03}</p>
               <center>
                 <div className="btn-group" style={{ marginTop: "50px" }}>
-                  <button className="btn btn-lg btn-warning">CONTINUE</button>
+                  <button
+                    className="btn btn-lg btn-warning myoder"
+                    onClick={(e) => goToMyOrder()}
+                  >
+                    {content.thank.myorder}
+                  </button>
                 </div>
               </center>
             </div>

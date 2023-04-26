@@ -13,7 +13,7 @@ export default function ListFood(props) {
               <div className="produre_box bg-white shadow-sm">
                 <div className="image_box">
                   <img
-                    src={product.image ? product.image : noimage}
+                    src={product.thumbnail ? product.thumbnail : noimage}
                     className="width100 height100"
                     alt=""
                   ></img>
@@ -31,7 +31,7 @@ export default function ListFood(props) {
                     </span>
                   </div>
                   <div className="product__description split mb-2">
-                    {product.description}
+                    {product.desc}
                   </div>
                   <div className="add-to-cart-">
                     <div className="star_box">

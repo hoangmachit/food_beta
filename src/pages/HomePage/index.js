@@ -124,8 +124,8 @@ function HomePage() {
         .post(process.env.REACT_APP_API_ENDPOINT + `/configs`)
         .then((res) => {
           const { data } = res;
-          setConfigs(data.data);
-          createQrMomo(data.data);
+          setConfigs(data);
+          createQrMomo(data);
         })
         .catch((error) => console.log(error));
     };
@@ -134,10 +134,10 @@ function HomePage() {
   useEffect(() => {
     const getProducts = async () => {
       await axios
-        .post(process.env.REACT_APP_API_ENDPOINT + `/product_list`)
+        .post(process.env.REACT_APP_API_ENDPOINT + `/products`)
         .then((res) => {
           const { data } = res;
-          setProducts(data.data);
+          setProducts(data);
         })
         .catch((error) => console.log(error));
     };
@@ -164,20 +164,19 @@ function HomePage() {
     setLanguage(language);
     localStorage.setItem("language", language);
   };
-
-  useEffect(() => {
-    const getOrder = async () => {
-      const data = {
-        token_id: token_id,
-      };
-      await axios
-        .post(process.env.REACT_APP_API_ENDPOINT + `/order/list`, data)
-        .then((res) => {
-          const { data } = res;
-          setOrders(data.data);
-        })
-        .catch((error) => console.log(error));
+  const getOrder = async () => {
+    const data = {
+      token_id: token_id,
     };
+    await axios
+      .post(process.env.REACT_APP_API_ENDPOINT + `/orders/list`, data)
+      .then((res) => {
+        const { data } = res;
+        setOrders(data);
+      })
+      .catch((error) => console.log(error));
+  };
+  useEffect(() => {
     getOrder();
   }, []);
 
@@ -284,40 +283,24 @@ function HomePage() {
         phone_number: localStorage.getItem("phone_number"),
         order_payment: order_payment,
       };
-      // await axios
-      //   .post(process.env.REACT_APP_API_ENDPOINT + `/order/create`, data)
-      //   .then((res) => {
-      //     const response = res.data;
-      //     if (response.success) {
-      //       clearCart();
-      //       localStorage.setItem("token_id", token_id);
-      //       const newDefault = {
-      //         ...defaulToast,
-      //         status: true,
-      //         body: "Add to cart success !!!",
-      //         time: "just now",
-      //         header: "Add to cart",
-      //       };
-      //       setToast(newDefault);
-      //     }
-      //   })
-      //   .catch((error) => console.log(error));
       handleLoading(true);
       await axios
-        .get(`http://localhost/haweb.vn/wp-json/wp/v2/categories`, data)
+        .post(process.env.REACT_APP_API_ENDPOINT + `/orders/create`, data)
         .then((res) => {
-          handleLoading(false);
-          setTokenId(token_id);
-          handlePage("home");
-          clearCart();
-          handleStep(true, false, false);
-          setTimeout(() => {
-            handleStep(false, false, false);
-            handleModalCart();
-          }, 3000);
+          const { data } = res;
+          if (data) {
+            handleLoading(false);
+            clearCart();
+            handleStep(false, false, true);
+          }
         })
         .catch((error) => console.log(error));
     }
+  };
+  const goToMyOrder = () => {
+    handleStep(false, false, false);
+    handlePage("order");
+    handleModalMyOrder();
   };
   return (
     <>
@@ -489,6 +472,7 @@ function HomePage() {
           handleUserName={handleUserName}
           phone_number={phone_number}
           handlePhoneNumber={handlePhoneNumber}
+          goToMyOrder={goToMyOrder}
         ></ModalCart>
         {/* Modal Cart */}
         {/* List Food */}

@@ -80,9 +80,9 @@ export default function ModalMyOrder(props) {
                           {content.phone_number}: {order.phone_number}
                         </p>
                         <p>
-                          {content.payment_method}: {order.order_payment}
+                          {content.payment_method}: {order.payment.name}
                         </p>
-                        {order.order_payment === "momo" && (
+                        {order.payment.id === 1 && (
                           <img
                             className="payment_momo "
                             src={
@@ -101,14 +101,14 @@ export default function ModalMyOrder(props) {
                         )}
                       </td>
                       <td>
-                        {JSON.parse(order.order_detail).map((item) => (
+                        {order.order_detail.map((item) => (
                           <div key={item.id}>
                             <div
                               className="cart_img_box float-left mb-2"
                               style={{ width: 80 }}
                             >
                               <img
-                                src={item.image ? item.image : noimage}
+                                src={item.thumbnail ? item.thumbnail : noimage}
                                 width="100%"
                                 height="100%"
                                 alt=""
@@ -121,9 +121,7 @@ export default function ModalMyOrder(props) {
                               >
                                 {item.name}
                               </p>
-                              <p style={{ fontSize: "85%" }}>
-                                {item.description}
-                              </p>
+                              <p style={{ fontSize: "85%" }}>{item.desc}</p>
                             </div>
                             <div
                               className="quanlity"
@@ -133,15 +131,15 @@ export default function ModalMyOrder(props) {
                                 height: 30,
                               }}
                             >
-                              <p>{item.qty}</p>
+                              <p>{item.quantity}</p>
                             </div>
                             <div style={{ clear: "both" }} />
                           </div>
                         ))}
                       </td>
-                      <td className="text-center">{order.total_price}</td>
+                      <td className="text-center">{order.total}</td>
                       <td className="text-center">
-                        {order.order_status === 0 && (
+                        {order.order_status_id === 1 && (
                           <button
                             id="status_prinf0"
                             className="btn btn-danger text-white"
@@ -149,7 +147,7 @@ export default function ModalMyOrder(props) {
                             {content.status_wait}
                           </button>
                         )}
-                        {order.order_status === 1 && (
+                        {order.order_status_id === 2 && (
                           <button
                             id="status_prinf0"
                             className="btn btn-success text-white"
@@ -159,7 +157,7 @@ export default function ModalMyOrder(props) {
                             {content.status_wait_delivery}
                           </button>
                         )}
-                        {order.order_status === 2 && (
+                        {order.order_status_id === 3 && (
                           <button
                             id="status_prinf0"
                             className="btn btn-success text-white"
@@ -167,7 +165,7 @@ export default function ModalMyOrder(props) {
                             {content.status_delivered}
                           </button>
                         )}
-                        {order.order_status >= 3 && (
+                        {order.order_status >= 4 && (
                           <button
                             id="status_prinf0"
                             className="btn btn-secondary text-white"

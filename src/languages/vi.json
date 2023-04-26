@@ -53,5 +53,11 @@
     "company_name": "Công ty TNHH Allgrow-labo ALLGROW Inc.",
     "address": "Tầng 4, toà nhà An Phú Plaza, 117-119 Lý Chính Thắng, P. Võ Thị Sáu, Q.3, TP Hồ Chí Minh, Việt Nam",
     "facebook": "Contact Support Team"
-  }
+  },
+  "thank": {
+    "thank01": "Đơn hàng của bạn đã được nhận",
+    "thank02": "Cảm ơn bạn đã thanh toán, đang được xử lý",
+    "thank03": "Bạn sẽ nhận được email xác nhận đơn hàng với thông tin chi tiết và đường link để theo dõi quá trình của đơn hàng.",
+    "myorder": "Kiểm tra đơn hàng"
+    }
 }
