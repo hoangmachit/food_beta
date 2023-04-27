@@ -82,7 +82,7 @@ function HomePage() {
     }
     return result;
   };
-  const [token_id, setTokenId] = useState(
+  const [token_id] = useState(
     localStorage.getItem("token_id")
       ? localStorage.getItem("token_id")
       : makeToken(30)
@@ -124,8 +124,10 @@ function HomePage() {
         .post(process.env.REACT_APP_API_ENDPOINT + `/configs`)
         .then((res) => {
           const { data } = res;
-          setConfigs(data);
-          createQrMomo(data);
+          if (data.success) {
+            setConfigs(data.result);
+            createQrMomo(data.result);
+          }
         })
         .catch((error) => console.log(error));
     };
@@ -172,7 +174,10 @@ function HomePage() {
       .post(process.env.REACT_APP_API_ENDPOINT + `/orders/list`, data)
       .then((res) => {
         const { data } = res;
-        setOrders(data);
+        console.log("Data", data);
+        if (data.success) {
+          setOrders(data.result);
+        }
       })
       .catch((error) => console.log(error));
   };
@@ -288,13 +293,38 @@ function HomePage() {
         .post(process.env.REACT_APP_API_ENDPOINT + `/orders/create`, data)
         .then((res) => {
           const { data } = res;
-          if (data) {
-            handleLoading(false);
+          if (data.success) {
+            localStorage.setItem("token_id", token_id);
             clearCart();
-            handleStep(false, false, true);
+            getOrder();
+            setModalOrder(true);
+          } else {
+
+            const newDefault = {
+              ...defaulToast,
+              status: true,
+              body: content.order_fail?.body,
+              time: content.order_fail?.time,
+              header: content.order_fail?.header,
+            };
+            setToast(newDefault);
           }
         })
-        .catch((error) => console.log(error));
+        .catch((error) => {
+          const newDefault = {
+            ...defaulToast,
+            status: true,
+            body: content.order_fail?.body,
+            time: content.order_fail?.time,
+            header: content.order_fail?.header,
+          };
+          setToast(newDefault);
+        })
+        .then(() => {
+          handleLoading(false);
+          handleStep(false, false, true);
+          setModalCart(false);
+        })
     }
   };
   const goToMyOrder = () => {

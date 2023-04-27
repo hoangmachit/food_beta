@@ -59,5 +59,15 @@
     "thank02": "Cảm ơn bạn đã thanh toán, đang được xử lý",
     "thank03": "Bạn sẽ nhận được email xác nhận đơn hàng với thông tin chi tiết và đường link để theo dõi quá trình của đơn hàng.",
     "myorder": "Kiểm tra đơn hàng"
-    }
+  },
+  "bank": {
+    "name": "Ngân hàng:",
+    "card_holder": "Chủ thẻ:",
+    "card_number": "Số tài khoản:"
+  },
+  "order_fail": {
+    "body": "Tạo đơn hàng lỗi. Vui lòng kiểm tra lại thông tin",
+    "time": "Vừa xong",
+    "header": "Tạo đơn hàng"
+  }
 }

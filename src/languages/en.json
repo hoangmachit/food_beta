@@ -54,10 +54,20 @@
     "address": "4th Floor, An Phu Plaza Building, 117-119 Ly Chinh Thang, Vo Thi Sau Ward, District 3, Ho Chi Minh City, Vietnam",
     "facebook": "Contact Support Team"
   },
-  "thank":{
+  "thank": {
     "thank01": "Your order has been received",
     "thank02": "Thank you for your payment, it’s processing",
     "thank03": " You will receive an order confirmation email with details of your order and a link to track your process.",
     "myorder": "Check my order"
+  },
+  "bank": {
+    "name": "Bank name:",
+    "card_holder": "Card holder:",
+    "card_number": "Card number:"
+  },
+  "order_fail": {
+    "body": "Failed to create order. Please check the information again.",
+    "time": "Just now",
+    "header": "Create order"
   }
 }

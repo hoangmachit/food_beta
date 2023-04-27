@@ -55,6 +55,7 @@ export default function ModalMyOrder(props) {
                     className="text-center"
                   >
                     {content.total_price}
+
                   </th>
                   <th
                     scope="col"
@@ -137,9 +138,14 @@ export default function ModalMyOrder(props) {
                           </div>
                         ))}
                       </td>
-                      <td className="text-center">{order.total}</td>
                       <td className="text-center">
-                        {order.order_status_id === 1 && (
+                        {order.total
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                        đ
+                      </td>
+                      <td className="text-center">
+                        {order.order_status.id === 1 && (
                           <button
                             id="status_prinf0"
                             className="btn btn-danger text-white"
@@ -147,7 +153,7 @@ export default function ModalMyOrder(props) {
                             {content.status_wait}
                           </button>
                         )}
-                        {order.order_status_id === 2 && (
+                        {order.order_status.id === 2 && (
                           <button
                             id="status_prinf0"
                             className="btn btn-success text-white"
@@ -157,7 +163,7 @@ export default function ModalMyOrder(props) {
                             {content.status_wait_delivery}
                           </button>
                         )}
-                        {order.order_status_id === 3 && (
+                        {order.order_status.id === 3 && (
                           <button
                             id="status_prinf0"
                             className="btn btn-success text-white"
@@ -165,7 +171,7 @@ export default function ModalMyOrder(props) {
                             {content.status_delivered}
                           </button>
                         )}
-                        {order.order_status >= 4 && (
+                        {order.order_status.id >= 4 && (
                           <button
                             id="status_prinf0"
                             className="btn btn-secondary text-white"

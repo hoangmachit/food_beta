@@ -333,6 +333,9 @@ export default function ModalCart(props) {
                           {content.phone_number} : {configs[1].value}
                         </p>
                         <p>Email : {configs[3].value}</p>
+                        <p>{content.bank.name} : {configs[7].value}</p>
+                        <p>{content.bank.card_holder} : {configs[8].value}</p>
+                        <p>{content.bank.card_number} : {configs[9].value}</p>
                       </div>
                     )}
                     <div style={{ clear: "both" }} />
