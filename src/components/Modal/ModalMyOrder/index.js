@@ -4,12 +4,6 @@ import { Modal } from "react-bootstrap";
 
 export default function ModalMyOrder(props) {
   const { content, orders, show, onHide, img_momo } = props;
-  const [user_name] = localStorage.getItem("user_name")
-    ? localStorage.getItem("user_name")
-    : "";
-  const [phone_number] = localStorage.getItem("phone_number")
-    ? localStorage.getItem("phone_number")
-    : "";
   return (
     <Modal
       size="lg"
@@ -72,15 +66,16 @@ export default function ModalMyOrder(props) {
                     <tr
                       key={order.id}
                       style={{ borderBottom: "1px solid #ccc" }}
+                      className={order.today ? 'tr_today' : 'th_other'}
                     >
                       <td>
-                        <p>
+                        <p className="product-text">
                           {content.name}: {order.user_name}
                         </p>
-                        <p>
+                        <p className="product-text">
                           {content.phone_number}: {order.phone_number}
                         </p>
-                        <p>
+                        <p className="product-text">
                           {content.payment_method}: {order.payment.name}
                         </p>
                         {order.payment.id === 1 && (
@@ -88,11 +83,11 @@ export default function ModalMyOrder(props) {
                             className="payment_momo "
                             src={
                               img_momo +
-                              order.total_price +
+                              order.total +
                               "|Người đặt: " +
-                              user_name +
+                              order.user_name +
                               " -- SDT: " +
-                              phone_number +
+                              order.phone_number +
                               "|transfer_myqr"
                             }
                             width="100%"
@@ -124,16 +119,18 @@ export default function ModalMyOrder(props) {
                               </p>
                               <p style={{ fontSize: "85%" }}>{item.desc}</p>
                             </div>
-                            <div
-                              className="quanlity"
-                              style={{
-                                float: "right",
-                                width: 30,
-                                height: 30,
-                              }}
-                            >
-                              <p>{item.quantity}</p>
-                            </div>
+                            {item.price > 0 &&
+                              <div
+                                className="quanlity"
+                                style={{
+                                  float: "right",
+                                  width: 30,
+                                  height: 30,
+                                }}
+                              >
+                                <p>{item.quantity}</p>
+                              </div>
+                            }
                             <div style={{ clear: "both" }} />
                           </div>
                         ))}
@@ -141,43 +138,39 @@ export default function ModalMyOrder(props) {
                       <td className="text-center">
                         {order.total
                           .toString()
-                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
                         đ
                       </td>
                       <td className="text-center">
                         {order.order_status.id === 1 && (
-                          <button
-                            id="status_prinf0"
-                            className="btn btn-danger text-white"
+                          <span
+                            className="status_prinf0 badge badge-danger text-white"
                           >
                             {content.status_wait}
-                          </button>
+                          </span>
                         )}
                         {order.order_status.id === 2 && (
-                          <button
-                            id="status_prinf0"
-                            className="btn btn-success text-white"
+                          <span
+                            className="status_prinf0 badge badge-success text-white"
                           >
                             {content.confirmed}
                             <br></br>
                             {content.status_wait_delivery}
-                          </button>
+                          </span>
                         )}
                         {order.order_status.id === 3 && (
-                          <button
-                            id="status_prinf0"
-                            className="btn btn-success text-white"
+                          <span
+                            className="status_prinf0 badge badge-success text-white"
                           >
                             {content.status_delivered}
-                          </button>
+                          </span>
                         )}
                         {order.order_status.id >= 4 && (
-                          <button
-                            id="status_prinf0"
-                            className="btn btn-secondary text-white"
+                          <span
+                            className="status_prinf0 badge badge-secondary text-white"
                           >
                             {content.status_completed}
-                          </button>
+                          </span>
                         )}
                       </td>
                     </tr>

@@ -55,10 +55,10 @@
     "facebook": "Contact Support Team"
   },
   "thank": {
-    "thank01": "Đơn hàng của bạn đã được nhận",
-    "thank02": "Cảm ơn bạn đã thanh toán, đang được xử lý",
-    "thank03": "Bạn sẽ nhận được email xác nhận đơn hàng với thông tin chi tiết và đường link để theo dõi quá trình của đơn hàng.",
-    "myorder": "Kiểm tra đơn hàng"
+    "thank01": "Đơn hàng thành công !!!",
+    "thank02": "Vui lòng kiểm tra lại trạng thái và tên món ăn trong đơn hàng trước khi lấy đồ ăn.",
+    "myorder": "Kiểm tra đơn hàng",
+    "count": "Sau 3 giây hệ thống sẽ tự động chuyển sang trang đặt hàng của bạn"
   },
   "bank": {
     "name": "Ngân hàng:",
@@ -69,5 +69,6 @@
     "body": "Tạo đơn hàng lỗi. Vui lòng kiểm tra lại thông tin",
     "time": "Vừa xong",
     "header": "Tạo đơn hàng"
-  }
+  },
+  "free": "Miễn phí"
 }

@@ -174,7 +174,6 @@ function HomePage() {
       .post(process.env.REACT_APP_API_ENDPOINT + `/orders/list`, data)
       .then((res) => {
         const { data } = res;
-        console.log("Data", data);
         if (data.success) {
           setOrders(data.result);
         }
@@ -297,9 +296,12 @@ function HomePage() {
             localStorage.setItem("token_id", token_id);
             clearCart();
             getOrder();
-            setModalOrder(true);
+            handleStep(false, false, true);
+            setTimeout(() => {
+              setModalCart(false);
+              setModalOrder(true);
+            }, 3000);
           } else {
-
             const newDefault = {
               ...defaulToast,
               status: true,
@@ -322,12 +324,11 @@ function HomePage() {
         })
         .then(() => {
           handleLoading(false);
-          handleStep(false, false, true);
-          setModalCart(false);
         })
     }
   };
   const goToMyOrder = () => {
+    setModalCart(false);
     handleStep(false, false, false);
     handlePage("order");
     handleModalMyOrder();

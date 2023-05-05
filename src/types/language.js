@@ -9,6 +9,6 @@ const TypeLanguage = [
 ];
 let storedLanguage = localStorage.getItem('language');
 if (!(storedLanguage && TypeLanguage.includes(storedLanguage))) {
-    storedLanguage = TypeLanguage[1];
+    storedLanguage = TypeLanguage[0];
 }
 export { storedLanguage, VI, EN, JA };

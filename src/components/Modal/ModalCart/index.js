@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Modal } from "react-bootstrap";
 import { SvgTrash } from "../../Svg";
 import icon_payCart from "../../../assets/img/paycart.png";
@@ -130,10 +130,9 @@ export default function ModalCart(props) {
                                   </td>
                                   <td className="text-center">
                                     <p className="mt-2" style={{ padding: 5 }}>
-                                      {item.price
+                                      {parseInt(item.price) > 0 ? `${item.price
                                         .toString()
-                                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                                      đ
+                                        .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}đ` : content.free}
                                     </p>
                                   </td>
                                   <td className="text-center">
@@ -171,7 +170,7 @@ export default function ModalCart(props) {
                     >
                       {total_price
                         .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
                       đ
                     </p>
                   </div>
@@ -316,7 +315,7 @@ export default function ModalCart(props) {
                         <p className="text-danger font-weight-bold mb-0">
                           {total_price
                             .toString()
-                            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{" "}
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}{" "}
                           VND
                         </p>
                         <p className="text-primary font-italic mb-0">
@@ -367,10 +366,10 @@ export default function ModalCart(props) {
           <>
             <div className="jumbotron" style={{ margin: 0 }}>
               <h2 className="text-center thank01">{content.thank.thank01}</h2>
-              <h3 className="text-center thank02">{content.thank.thank02}</h3>
-              <p className="text-center thank03">{content.thank.thank03}</p>
+              <p className="text-center thank03">{content.thank.thank02}</p>
+              <p className="text-center thank_count">{content.thank.count}</p>
               <center>
-                <div className="btn-group" style={{ marginTop: "50px" }}>
+                <div className="btn-group" style={{ marginTop: "10px" }}>
                   <button
                     className="btn btn-lg btn-warning myoder"
                     onClick={(e) => goToMyOrder()}

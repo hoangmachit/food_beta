@@ -134,7 +134,6 @@ a:hover {
   height: 20px;
   position: relative;
 }
-
 .svg-delete svg {
   fill: #fb9200;
   position: absolute;
@@ -219,6 +218,7 @@ input.cart_input_quanlity {
   text-overflow: ellipsis;
   line-height: 1;
   display: -webkit-box;
+  -webkit-box-orient: vertical;
 }
 
 /* THIRD */
@@ -229,19 +229,16 @@ input.cart_input_quanlity {
   border-radius: 5px;
   cursor: pointer;
 }
-
 .produre_box .product__name h3 {
   font-weight: bold;
   font-size: 1rem;
   -webkit-line-clamp: 1;
 }
-
 .produre_box .product__price span {
   font-weight: bold;
   font-size: 1rem;
   color: black;
 }
-
 .produre_box .product__description {
   -webkit-line-clamp: 3;
   line-height: 1.4;
@@ -452,7 +449,6 @@ input.cart_input_quanlity {
     transform: rotate(360deg);
   }
 }
-
 /* Modal */
 .heading-modal {
   font-weight: bold;
@@ -468,14 +464,12 @@ input.cart_input_quanlity {
   width: 100%;
   max-width: 250px;
 }
-
 .toast-fixed .toast {
   min-width: 250px;
   position: absolute;
   top: 0;
   right: 0;
 }
-
 .toast-fixed .toast button:focus {
   outline: none;
   box-shadow: none;
@@ -487,7 +481,6 @@ input.cart_input_quanlity {
   justify-content: space-between;
   flex-direction: row-reverse;
 }
-
 #payment_form .choose_box {
   width: 48%;
 }
@@ -502,7 +495,6 @@ input.cart_input_quanlity {
     font-size: 16px;
   }
 }
-
 @media (max-width: 858px) {
   .checkbtn {
     position: absolute;
@@ -543,7 +535,6 @@ input.cart_input_quanlity {
     left: 0;
   }
 }
-
 @media (max-width: 768px) {
   #style2 {
     margin-left: 2rem;
@@ -588,7 +579,6 @@ input.cart_input_quanlity {
     margin-top: 0.75rem;
   }
 }
-
 @media (max-width: 560px) {
   .produre_box {
     padding: 0.5rem;
@@ -628,8 +618,30 @@ input.cart_input_quanlity {
     font-size: 16px !important;
   }
 }
-
-.payment_nama, .payment_sacom {
+.payment_nama,
+.payment_sacom {
   margin-right: 10px;
 }
-/*# sourceMappingURL=styles.css.map */
+
+.status_prinf0 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.product-text {
+  margin-bottom: 0.5rem;
+}
+
+.tr_today {
+  border: 1px solid #ebebeb !important;
+  position: relative;
+}
+
+.th_other {
+  opacity: 0.4;
+  margin-top: 2rem;
+}
+
+.thank_count {
+  font-size: 70%;
+}/*# sourceMappingURL=styles.css.map */

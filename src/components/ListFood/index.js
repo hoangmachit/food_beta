@@ -24,10 +24,9 @@ export default function ListFood(props) {
                   </div>
                   <div className="product__price mb-2 d-flex justify-content-end align-items-center">
                     <span>
-                      {product.price
+                      {product.price ? `${product.price
                         .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                      đ
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ` : content.free}
                     </span>
                   </div>
                   <div className="product__description split mb-2">
@@ -39,7 +38,7 @@ export default function ListFood(props) {
                         {content.num_bought} :{" "}
                       </span>
                       <span style={{ fontWeight: "bold" }}>
-                        {product.num_bought}
+                        {product.buy}
                       </span>
                     </div>
                     <div

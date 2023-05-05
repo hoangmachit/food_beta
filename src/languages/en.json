@@ -55,10 +55,10 @@
     "facebook": "Contact Support Team"
   },
   "thank": {
-    "thank01": "Your order has been received",
-    "thank02": "Thank you for your payment, it’s processing",
-    "thank03": " You will receive an order confirmation email with details of your order and a link to track your process.",
-    "myorder": "Check my order"
+    "thank01": "Order successful!!!",
+    "thank02": "Please check the status and name of the dishes in the order before picking up the food",
+    "myorder": "Check my order",
+    "count": "After 3 seconds, the system will automatically redirect to your order page"
   },
   "bank": {
     "name": "Bank name:",
@@ -69,5 +69,6 @@
     "body": "Failed to create order. Please check the information again.",
     "time": "Just now",
     "header": "Create order"
-  }
+  },
+  "free": "Free"
 }
