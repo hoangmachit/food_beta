@@ -61,40 +61,33 @@ function HomePage() {
     localStorage.setItem("order_payment", real_payment);
   };
   const [total_qty, setTotalQty] = useState(
-    localStorage.getItem("total_qty") ? localStorage.getItem("total_qty") : 0
+    localStorage.getItem("total_qty") ?? 0
   );
-
-  const [cart, setCart] = useState(
-    localStorage.getItem("cart") ? JSON.parse(localStorage.getItem("cart")) : []
-  );
+  const [cart, setCart] = useState(localStorage.getItem("cart") ? JSON.parse(localStorage.getItem("cart")) : []);
   const [total_price, setTotalPrice] = useState(
-    localStorage.getItem("total_price")
-      ? localStorage.getItem("total_price")
-      : 0
+    localStorage.getItem("total_price") ?? 0
   );
   const makeToken = (length) => {
-    var result = "";
-    var characters =
+    let result = "";
+    const characters =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    var charactersLength = characters.length;
-    for (var i = 0; i < length; i++) {
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
   };
   const [token_id] = useState(
-    localStorage.getItem("token_id")
-      ? localStorage.getItem("token_id")
-      : makeToken(30)
+    localStorage.getItem("token_id") ?? makeToken(30)
   );
   const [user_name, setUserName] = useState(
-    localStorage.getItem("user_name") ? localStorage.getItem("user_name") : ""
+    localStorage.getItem("user_name") ?? ""
   );
   const [phone_number, setPhoneNumber] = useState(
-    localStorage.getItem("phone_number")
-      ? localStorage.getItem("phone_number")
-      : ""
+    localStorage.getItem("phone_number") ?? ""
   );
+  const [img_momo, setImgMomo] = useState("");
+
   const handleUserName = (evt) => {
     localStorage.setItem("user_name", evt.target.value);
     setUserName(evt.target.value);
@@ -103,7 +96,6 @@ function HomePage() {
     localStorage.setItem("phone_number", evt.target.value);
     setPhoneNumber(evt.target.value);
   };
-  const [img_momo, setImgMomo] = useState("");
 
   useEffect(() => {
     const createQrMomo = async (configs) => {
@@ -283,8 +275,8 @@ function HomePage() {
         token_id: token_id,
         order_detail: JSON.stringify(cart),
         total_price: total_price,
-        user_name: localStorage.getItem("user_name"),
-        phone_number: localStorage.getItem("phone_number"),
+        user_name: user_name,
+        phone_number: phone_number,
         order_payment: order_payment,
       };
       handleLoading(true);
@@ -324,7 +316,7 @@ function HomePage() {
         })
         .then(() => {
           handleLoading(false);
-        })
+        });
     }
   };
   const goToMyOrder = () => {
