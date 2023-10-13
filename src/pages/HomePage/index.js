@@ -63,7 +63,9 @@ function HomePage() {
   const [total_qty, setTotalQty] = useState(
     localStorage.getItem("total_qty") ?? 0
   );
-  const [cart, setCart] = useState(localStorage.getItem("cart") ? JSON.parse(localStorage.getItem("cart")) : []);
+  const [cart, setCart] = useState(
+    localStorage.getItem("cart") ? JSON.parse(localStorage.getItem("cart")) : []
+  );
   const [total_price, setTotalPrice] = useState(
     localStorage.getItem("total_price") ?? 0
   );
@@ -337,7 +339,7 @@ function HomePage() {
             hideToast={hideToast}
           />
         )}
-        {/* Header menu */}
+
         <div className="container-fluid p-0" id="style1">
           <p id="style2">
             {content.slogan1}
@@ -351,6 +353,7 @@ function HomePage() {
             <br></br>
             {content.slogan2_2}
           </p>
+
           {products && configs[6] && configs[6].value === "on" && (
             <button
               id="style4"
@@ -363,14 +366,17 @@ function HomePage() {
               {content.order_now}
             </button>
           )}
+
           <nav id="menu" className={scrolling ? "scroll_event_Add_class" : ""}>
             <input type="checkbox" id="check"></input>
             <label htmlFor="check" className="checkbtn">
               <span className="menu-bar"></span>
             </label>
+
             <a href="/" className="logo" title="Allgrow Labo">
               {configs[0] && configs[0].value}
             </a>
+
             <ul>
               <li>
                 <a
@@ -460,8 +466,7 @@ function HomePage() {
             </ul>
           </nav>
         </div>
-        {/* Header menu */}
-        {/* My Order */}
+
         <ModalMyOrder
           content={content}
           orders={orders}
@@ -470,9 +475,7 @@ function HomePage() {
           onHide={() => handleModalMyOrder()}
           img_momo={img_momo}
         ></ModalMyOrder>
-        {/* My Order */}
 
-        {/* Modal Cart */}
         <ModalCart
           content={content}
           cart={cart}
@@ -497,19 +500,8 @@ function HomePage() {
           handlePhoneNumber={handlePhoneNumber}
           goToMyOrder={goToMyOrder}
         ></ModalCart>
-        {/* Modal Cart */}
-        {/* List Food */}
+
         <div ref={scollToRef}>
-          {/* {products &&
-            configs[6] &&
-            configs[6].value === "on" && (
-              <ListFood
-                content={content}
-                products={products}
-              // addCart={this.addCart}
-              // loading={this.loading}
-              ></ListFood>
-            )} */}
           <ListFood
             content={content}
             products={products}
@@ -517,7 +509,6 @@ function HomePage() {
             loading={loading}
           ></ListFood>
         </div>
-        {/* List Food */}
       </div>
       <Footer content={content} />
     </>
