@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Modal } from "react-bootstrap";
 import { SvgTrash } from "../../Svg";
 import icon_payCart from "../../../assets/img/paycart.png";
@@ -8,10 +8,10 @@ export default function ModalCart(props) {
   const {
     content,
     cart,
-    total_price,
+    totalPrice,
     configs,
     payBill,
-    img_momo,
+    imgMomo,
     clearCart,
     removeCartItem,
     show,
@@ -19,11 +19,11 @@ export default function ModalCart(props) {
     step,
     handleStep,
     handleOrderPayment,
-    order_payment,
+    orderPayment,
     paymentMethod,
-    user_name,
+    userName,
     handleUserName,
-    phone_number,
+    phoneNumber,
     handlePhoneNumber,
     goToMyOrder,
   } = props;
@@ -168,7 +168,7 @@ export default function ModalCart(props) {
                       className="font-weight-bold float-right mt-2"
                       style={{ fontSize: "115%" }}
                     >
-                      {total_price
+                      {totalPrice
                         .toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
                       đ
@@ -230,7 +230,7 @@ export default function ModalCart(props) {
                     type="text"
                     className="form-control "
                     aria-describedby="emailHelp"
-                    value={user_name}
+                    value={userName}
                     onChange={(evt) => handleUserName(evt)}
                   />
                   <label
@@ -245,7 +245,7 @@ export default function ModalCart(props) {
                     className="form-control "
                     aria-describedby="emailHelp"
                     placeholder="Nhập Số điện thoại"
-                    value={phone_number}
+                    value={phoneNumber}
                     onChange={(evt) => handlePhoneNumber(evt)}
                   />
                   <div className="mt-4" style={{ clear: "both" }} />
@@ -262,7 +262,7 @@ export default function ModalCart(props) {
                       width="15%"
                       height="15%"
                       style={
-                        order_payment === paymentMethod.MOMO
+                        orderPayment === paymentMethod.MOMO
                           ? { border: "2px solid rgb(33, 149, 243)" }
                           : { border: "1px solid rgb(215, 215, 215)" }
                       }
@@ -280,7 +280,7 @@ export default function ModalCart(props) {
                       width="15%"
                       height="15%"
                       style={
-                        order_payment === paymentMethod.CASH
+                        orderPayment === paymentMethod.CASH
                           ? { border: "2px solid rgb(33, 149, 243)" }
                           : { border: "1px solid rgb(215, 215, 215)" }
                       }
@@ -294,17 +294,17 @@ export default function ModalCart(props) {
                     className="payment_choose_box "
                     style={{ width: "100%" }}
                   >
-                    {order_payment === paymentMethod.MOMO ? (
+                    {orderPayment === paymentMethod.MOMO ? (
                       <div className="text-center" style={{ width: "100%" }}>
                         <img
                           className="payment_momo"
                           src={
-                            img_momo +
-                            total_price +
+                            imgMomo +
+                            totalPrice +
                             "|Người đặt: " +
-                            user_name +
+                            userName +
                             " -- SDT: " +
-                            phone_number +
+                            phoneNumber +
                             "|transfer_myqr"
                           }
                           width="100%"
@@ -313,7 +313,7 @@ export default function ModalCart(props) {
                           alt=""
                         />
                         <p className="text-danger font-weight-bold mb-0">
-                          {total_price
+                          {totalPrice
                             .toString()
                             .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}{" "}
                           VND

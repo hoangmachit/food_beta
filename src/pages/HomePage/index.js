@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
 import "./HomePage.css";
 import "../../assets/css/styles.css";
@@ -20,55 +20,40 @@ import Toast from "../../components/Toast";
 import { ModalCart, ModalMyOrder } from "../../components/Modal";
 
 function HomePage() {
-  const [modal_cart, setModalCart] = useState(false);
-  const [modal_order, setModalOrder] = useState(false);
+  const [modalCart, setModalCart] = useState(false);
+  const [modalOrder, setModalOrder] = useState(false);
   const [content, setContent] = useState({});
   const [scrolling, setScrolling] = useState(false);
   const [configs, setConfigs] = useState([]);
   const [products, setProducts] = useState({});
   const [orders, setOrders] = useState({});
   const [language, setLanguage] = useState(storedLanguage);
-  const scollToRef = useRef(null);
+  const scrollToRef = useRef(null);
   const [page, setPage] = useState("home");
   const [loading, setLoading] = useState(false);
-  const defaulToast = {
+  const defaultToast = {
     status: false,
     body: null,
     header: null,
     time: null,
   };
-  const [toast, setToast] = useState(defaulToast);
+  const [toast, setToast] = useState(defaultToast);
   const [step, setStep] = useState({
     one: true,
     two: false,
     three: false,
   });
-  const handleStep = (one, two, three) => {
-    setStep({
-      one,
-      two,
-      three,
-    });
-  };
-
-  const [order_payment, setOrderPayment] = useState(storedPayment);
-  const handleOrderPayment = (payment_name) => {
-    let real_payment = payment_name;
-    if (!(payment_name && TypePayment.includes(payment_name))) {
-      real_payment = CASH;
-    }
-    setOrderPayment(real_payment);
-    localStorage.setItem("order_payment", real_payment);
-  };
-  const [total_qty, setTotalQty] = useState(
-    localStorage.getItem("total_qty") ?? 0
+  const [orderPayment, setOrderPayment] = useState(storedPayment);
+  const [totalQty, setTotalQty] = useState(
+    localStorage.getItem("total_qty") || 0
   );
   const [cart, setCart] = useState(
     localStorage.getItem("cart") ? JSON.parse(localStorage.getItem("cart")) : []
   );
-  const [total_price, setTotalPrice] = useState(
-    localStorage.getItem("total_price") ?? 0
+  const [totalPrice, setTotalPrice] = useState(
+    localStorage.getItem("total_price") || 0
   );
+
   const makeToken = (length) => {
     let result = "";
     const characters =
@@ -79,21 +64,35 @@ function HomePage() {
     }
     return result;
   };
-  const [token_id] = useState(
-    localStorage.getItem("token_id") ?? makeToken(30)
+
+  const [tokenId] = useState(localStorage.getItem("token_id") || makeToken(30));
+  const [userName, setUserName] = useState(
+    localStorage.getItem("user_name") || ""
   );
-  const [user_name, setUserName] = useState(
-    localStorage.getItem("user_name") ?? ""
+  const [phoneNumber, setPhoneNumber] = useState(
+    localStorage.getItem("phone_number") || ""
   );
-  const [phone_number, setPhoneNumber] = useState(
-    localStorage.getItem("phone_number") ?? ""
-  );
-  const [img_momo, setImgMomo] = useState("");
+  const [imgMomo, setImgMomo] = useState("");
+
+  const handleStep = (one, two, three) => {
+    setStep({
+      one,
+      two,
+      three,
+    });
+  };
+
+  const handleOrderPayment = (paymentName) => {
+    const realPayment = TypePayment.includes(paymentName) ? paymentName : CASH;
+    setOrderPayment(realPayment);
+    localStorage.setItem("order_payment", realPayment);
+  };
 
   const handleUserName = (evt) => {
     localStorage.setItem("user_name", evt.target.value);
     setUserName(evt.target.value);
   };
+
   const handlePhoneNumber = (evt) => {
     localStorage.setItem("phone_number", evt.target.value);
     setPhoneNumber(evt.target.value);
@@ -102,48 +101,49 @@ function HomePage() {
   useEffect(() => {
     const createQrMomo = async (configs) => {
       if (!configs[0]) return;
-      const url =
-        process.env.REACT_APP_API_QR_ENDPOINT +
-        "/?size=348x348&data=2|99|" +
-        configs[1].value +
-        "|" +
-        configs[2].value +
-        "|" +
-        configs[3].value +
-        "|0|0|";
+      const url = `${process.env.REACT_APP_API_QR_ENDPOINT}/?size=348x348&data=2|99|${configs[1].value}|${configs[2].value}|${configs[3].value}|0|0|`;
       await setImgMomo(url);
     };
+
     const getConfig = async () => {
-      await axios
-        .post(process.env.REACT_APP_API_ENDPOINT + `/configs`)
-        .then((res) => {
-          const { data } = res;
-          if (data.success) {
-            setConfigs(data.result);
-            createQrMomo(data.result);
-          }
-        })
-        .catch((error) => console.log(error));
+      try {
+        const response = await axios.post(
+          `${process.env.REACT_APP_API_ENDPOINT}/configs`
+        );
+        const { data } = response;
+        if (data.success) {
+          setConfigs(data.result);
+          createQrMomo(data.result);
+        }
+      } catch (error) {
+        console.log(error);
+      }
     };
+
     getConfig();
   }, []);
+
   useEffect(() => {
     const getProducts = async () => {
-      await axios
-        .post(process.env.REACT_APP_API_ENDPOINT + `/products`)
-        .then((res) => {
-          const { data } = res;
-          setProducts(data);
-        })
-        .catch((error) => console.log(error));
+      try {
+        const response = await axios.post(
+          `${process.env.REACT_APP_API_ENDPOINT}/products`
+        );
+        const { data } = response;
+        setProducts(data);
+      } catch (error) {
+        console.log(error);
+      }
     };
+
     getProducts();
   }, []);
 
   useEffect(() => {
     handleLanguage(language);
   }, [language]);
-  const handleLanguage = (language) => {
+
+  const handleLanguage = async (language) => {
     switch (language) {
       case VI:
         setContent(translate_file_vi);
@@ -160,23 +160,27 @@ function HomePage() {
     setLanguage(language);
     localStorage.setItem("language", language);
   };
-  const getOrder = async () => {
-    const data = {
-      token_id: token_id,
-    };
-    await axios
-      .post(process.env.REACT_APP_API_ENDPOINT + `/orders/list`, data)
-      .then((res) => {
-        const { data } = res;
-        if (data.success) {
-          setOrders(data.result);
+
+  const getOrder = useCallback(async () => {
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_ENDPOINT}/orders/list`,
+        {
+          token_id: tokenId,
         }
-      })
-      .catch((error) => console.log(error));
-  };
+      );
+      const { data } = response;
+      if (data.success) {
+        setOrders(data.result);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [tokenId]);
+
   useEffect(() => {
     getOrder();
-  }, []);
+  }, [getOrder]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -186,37 +190,42 @@ function HomePage() {
         if (!scrolling) setScrolling(true);
       }
     };
+
     window.addEventListener("scroll", handleScroll);
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [scrolling]);
 
   const handleModalCart = () => {
-    setModalCart(!modal_cart);
+    setModalCart(!modalCart);
   };
+
   const handleModalMyOrder = () => {
-    setModalOrder(!modal_order);
+    setModalOrder(!modalOrder);
   };
-  const handlePage = (page_name) => {
-    setPage(page_name);
+
+  const handlePage = (pageName) => {
+    setPage(pageName);
   };
 
   const clearCart = () => {
-    localStorage.setItem("cart", []);
+    localStorage.setItem("cart", JSON.stringify([]));
     setCart([]);
     localStorage.setItem("total_qty", 0);
     setTotalQty(0);
     localStorage.setItem("total_price", 0);
     setTotalPrice(0);
   };
-  const removeCartItem = (product_id) => {
-    const itemToRemove = cart.find((item) => item.id === product_id);
+
+  const removeCartItem = (productId) => {
+    const itemToRemove = cart.find((item) => item.id === productId);
     if (itemToRemove) {
-      const newCart = cart.filter((item) => item.id !== product_id);
-      const newTotalQty = parseInt(total_qty) - itemToRemove.qty;
+      const newCart = cart.filter((item) => item.id !== productId);
+      const newTotalQty = parseInt(totalQty) - itemToRemove.qty;
       const newTotalPrice =
-        parseInt(total_price) - itemToRemove.price * itemToRemove.qty;
+        parseInt(totalPrice) - itemToRemove.price * itemToRemove.qty;
       setCart(newCart);
       setTotalQty(newTotalQty);
       setTotalPrice(newTotalPrice);
@@ -225,10 +234,13 @@ function HomePage() {
       localStorage.setItem("total_price", newTotalPrice);
     }
   };
-  const menuActive = "active  text-white";
-  const handleLoading = (loading) => {
-    setLoading(loading);
+
+  const menuActive = "active text-white";
+
+  const handleLoading = (isLoading) => {
+    setLoading(isLoading);
   };
+
   const addCart = (product_id) => {
     handleLoading(true);
     const product = products.find((p) => p.id === product_id);
@@ -240,8 +252,8 @@ function HomePage() {
     const newCart = existingCartItem
       ? cart.map((item) => (item.id === product_id ? newCartItem : item))
       : [...cart, newCartItem];
-    const newTotalQty = parseInt(total_qty) + 1;
-    const newTotalPrice = parseInt(total_price) + parseInt(newCartItem.price);
+    const newTotalQty = parseInt(totalQty) + 1;
+    const newTotalPrice = parseInt(totalPrice) + parseInt(newCartItem.price);
     setCart(newCart);
     setTotalQty(newTotalQty);
     setTotalPrice(newTotalPrice);
@@ -251,7 +263,7 @@ function HomePage() {
     setTimeout(() => {
       handleLoading(false);
       const newDefault = {
-        ...defaulToast,
+        ...defaultToast,
         status: true,
         body: content.notification?.text,
         time: content.notification?.just_now,
@@ -260,73 +272,204 @@ function HomePage() {
       setToast(newDefault);
     }, 1000);
   };
+
   const hideToast = () => {
-    setToast(defaulToast);
+    setToast(defaultToast);
   };
+
   const payBill = async () => {
-    if (!user_name) {
-      alert("You need add user_name");
+    if (!userName) {
+      alert("You need to add a user name");
       return false;
     }
-    if (!phone_number) {
-      alert("You need add phone_number");
+    if (!phoneNumber) {
+      alert("You need to add a phone number");
       return false;
     }
     if (cart.length > 0) {
-      const data = {
-        token_id: token_id,
-        order_detail: JSON.stringify(cart),
-        total_price: total_price,
-        user_name: user_name,
-        phone_number: phone_number,
-        order_payment: order_payment,
-      };
       handleLoading(true);
-      await axios
-        .post(process.env.REACT_APP_API_ENDPOINT + `/orders/create`, data)
-        .then((res) => {
-          const { data } = res;
-          if (data.success) {
-            localStorage.setItem("token_id", token_id);
-            clearCart();
-            getOrder();
-            handleStep(false, false, true);
-            setTimeout(() => {
-              setModalCart(false);
-              setModalOrder(true);
-            }, 3000);
-          } else {
-            const newDefault = {
-              ...defaulToast,
-              status: true,
-              body: content.order_fail?.body,
-              time: content.order_fail?.time,
-              header: content.order_fail?.header,
-            };
-            setToast(newDefault);
+      try {
+        const response = await axios.post(
+          `${process.env.REACT_APP_API_ENDPOINT}/orders/create`,
+          {
+            token_id: tokenId,
+            order_detail: JSON.stringify(cart),
+            total_price: totalPrice,
+            user_name: userName,
+            phone_number: phoneNumber,
+            order_payment: orderPayment,
           }
-        })
-        .catch((error) => {
+        );
+        const { data } = response;
+        if (data.success) {
+          localStorage.setItem("token_id", tokenId);
+          clearCart();
+          getOrder();
+          handleStep(false, false, true);
+          setTimeout(() => {
+            setModalCart(false);
+            setModalOrder(true);
+          }, 3000);
+        } else {
           const newDefault = {
-            ...defaulToast,
+            ...defaultToast,
             status: true,
             body: content.order_fail?.body,
             time: content.order_fail?.time,
             header: content.order_fail?.header,
           };
           setToast(newDefault);
-        })
-        .then(() => {
-          handleLoading(false);
-        });
+        }
+      } catch (error) {
+        const newDefault = {
+          ...defaultToast,
+          status: true,
+          body: content.order_fail?.body,
+          time: content.order_fail?.time,
+          header: content.order_fail?.header,
+        };
+        setToast(newDefault);
+      } finally {
+        handleLoading(false);
+      }
     }
   };
+
   const goToMyOrder = () => {
     setModalCart(false);
     handleStep(false, false, false);
     handlePage("order");
     handleModalMyOrder();
   };
+
+  const renderSlogan1 = () => {
+    return (
+      <p id="style2">
+        {content.slogan1}
+        <br></br>
+        {content.slogan1_1}
+        <br></br>
+        {content.slogan1_2}
+      </p>
+    );
+  };
+
+  const renderSlogan2 = () => {
+    return (
+      <p id="style3">
+        {content.slogan2}
+        <br></br>
+        {content.slogan2_2}
+      </p>
+    );
+  };
+
+  const renderButtonOrder = () => {
+    if (products && configs[6] && configs[6].value === "on") {
+      return (
+        <button
+          id="style4"
+          onClick={() => {
+            scrollToRef.current.scrollIntoView({
+              behavior: "smooth",
+            });
+          }}
+        >
+          {content.order_now}
+        </button>
+      );
+    }
+
+    return <></>;
+  };
+
+  const renderLanguageButton = () => {
+    const languageConfigArr = [
+      { id: JA, img: icon_japan_lang },
+      { id: VI, img: icon_vietnam_lang },
+      { id: EN, img: icon_english_lang },
+    ];
+    return (
+      <li>
+        {languageConfigArr.map((languageItem, index) => (
+          <a
+            key={`${languageItem.id} ${index}`}
+            id="menu_login_button"
+            className={language === languageItem.id ? menuActive : null}
+            href={`#${languageItem.id}`}
+            onClick={() => {
+              handleLanguage(languageItem.id);
+            }}
+          >
+            <img
+              src={languageItem.img}
+              width={25}
+              height={25}
+              alt={languageItem.id}
+            ></img>
+          </a>
+        ))}
+      </li>
+    );
+  };
+
+  const renderHeaderNav = () => {
+    return (
+      <nav id="menu" className={scrolling ? "scroll_event_Add_class" : ""}>
+        <input type="checkbox" id="check"></input>
+        <label htmlFor="check" className="checkbtn">
+          <span className="menu-bar"></span>
+        </label>
+
+        <a href="/" className="logo" title="Allgrow Labo">
+          {configs[0] && configs[0].value}
+        </a>
+
+        <ul>
+          <li>
+            <a
+              href={"#homepage"}
+              className={page === "home" ? menuActive : null}
+              onClick={() => handlePage("home")}
+            >
+              {content.menu1}
+            </a>
+          </li>
+          <li>
+            <a
+              style={{ position: "relative" }}
+              href={"#cart"}
+              className={page === "cart" ? menuActive : null}
+              onClick={() => {
+                handlePage("cart");
+                handleStep(true, false, false);
+                handleModalCart();
+              }}
+            >
+              {content.menu2}
+              <div id="style5">
+                <p id="order_number">{totalQty}</p>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a
+              href={"#myorder"}
+              className={page === "order" ? menuActive : null}
+              onClick={() => {
+                handlePage("order");
+                handleModalMyOrder();
+              }}
+            >
+              {content.menu3}
+            </a>
+          </li>
+          {renderLanguageButton()}
+        </ul>
+      </nav>
+    );
+  };
+
   return (
     <>
       <div className="HomePage">
@@ -341,177 +484,58 @@ function HomePage() {
         )}
 
         <div className="container-fluid p-0" id="style1">
-          <p id="style2">
-            {content.slogan1}
-            <br></br>
-            {content.slogan1_1}
-            <br></br>
-            {content.slogan1_2}
-          </p>
-          <p id="style3">
-            {content.slogan2}
-            <br></br>
-            {content.slogan2_2}
-          </p>
-
-          {products && configs[6] && configs[6].value === "on" && (
-            <button
-              id="style4"
-              onClick={() => {
-                scollToRef.current.scrollIntoView({
-                  behavior: "smooth",
-                });
-              }}
-            >
-              {content.order_now}
-            </button>
-          )}
-
-          <nav id="menu" className={scrolling ? "scroll_event_Add_class" : ""}>
-            <input type="checkbox" id="check"></input>
-            <label htmlFor="check" className="checkbtn">
-              <span className="menu-bar"></span>
-            </label>
-
-            <a href="/" className="logo" title="Allgrow Labo">
-              {configs[0] && configs[0].value}
-            </a>
-
-            <ul>
-              <li>
-                <a
-                  href={"#homepage"}
-                  className={page === "home" ? menuActive : null}
-                  onClick={() => handlePage("home")}
-                >
-                  {content.menu1}
-                </a>
-              </li>
-              <li>
-                <a
-                  style={{ position: "relative" }}
-                  href={"#cart"}
-                  className={page === "cart" ? menuActive : null}
-                  onClick={() => {
-                    handlePage("cart");
-                    handleStep(true, false, false);
-                    handleModalCart();
-                  }}
-                >
-                  {content.menu2}
-                  <div id="style5">
-                    <p id="order_number">{total_qty}</p>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a
-                  href={"#myorder"}
-                  className={page === "order" ? menuActive : null}
-                  onClick={() => {
-                    handlePage("order");
-                    handleModalMyOrder();
-                  }}
-                >
-                  {content.menu3}
-                </a>
-              </li>
-              <li>
-                <a
-                  id="menu_login_button"
-                  className={language === JA ? menuActive : null}
-                  href={"#ja"}
-                >
-                  <img
-                    src={icon_japan_lang}
-                    width={25}
-                    height={25}
-                    alt="JA"
-                    onClick={() => {
-                      handleLanguage(JA);
-                    }}
-                  ></img>
-                </a>
-                <a
-                  id="menu_login_button"
-                  className={language === VI ? menuActive : null}
-                  href={"#vi"}
-                >
-                  <img
-                    src={icon_vietnam_lang}
-                    width={25}
-                    height={25}
-                    alt="VI"
-                    onClick={() => {
-                      handleLanguage(VI);
-                    }}
-                  ></img>
-                </a>
-                <a
-                  id="menu_login_button"
-                  className={language === EN ? menuActive : null}
-                  href={"#en"}
-                >
-                  <img
-                    src={icon_english_lang}
-                    width={25}
-                    height={25}
-                    alt="EN"
-                    onClick={() => {
-                      handleLanguage(EN);
-                    }}
-                  ></img>
-                </a>
-              </li>
-            </ul>
-          </nav>
+          {renderSlogan1()}
+          {renderSlogan2()}
+          {renderButtonOrder()}
+          {renderHeaderNav()}
         </div>
 
         <ModalMyOrder
           content={content}
           orders={orders}
           page={page}
-          show={modal_order}
+          show={modalOrder}
           onHide={() => handleModalMyOrder()}
-          img_momo={img_momo}
-        ></ModalMyOrder>
+          imgMomo={imgMomo}
+        />
 
         <ModalCart
           content={content}
           cart={cart}
-          total_price={total_price}
+          totalPrice={totalPrice}
           page={page}
           configs={configs}
-          order_payment={order_payment}
+          orderPayment={orderPayment}
           paymentMethod={{ MOMO, CASH }}
           handleOrderPayment={handleOrderPayment}
           onHide={() => handleModalCart()}
           payBill={payBill}
           clearCart={clearCart}
           removeCartItem={removeCartItem}
-          img_momo={img_momo}
-          show={modal_cart}
+          imgMomo={imgMomo}
+          show={modalCart}
           handleModalCart={handleModalCart}
           step={step}
           handleStep={handleStep}
-          user_name={user_name}
+          userName={userName}
           handleUserName={handleUserName}
-          phone_number={phone_number}
+          phoneNumber={phoneNumber}
           handlePhoneNumber={handlePhoneNumber}
           goToMyOrder={goToMyOrder}
-        ></ModalCart>
+        />
 
-        <div ref={scollToRef}>
+        <div ref={scrollToRef}>
           <ListFood
             content={content}
             products={products}
             addCart={addCart}
             loading={loading}
-          ></ListFood>
+          />
         </div>
       </div>
       <Footer content={content} />
     </>
   );
 }
+
 export default HomePage;

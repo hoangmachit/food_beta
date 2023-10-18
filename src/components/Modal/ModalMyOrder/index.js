@@ -3,7 +3,7 @@ import noimage from "../../../assets/img/no-image.png";
 import { Modal } from "react-bootstrap";
 
 export default function ModalMyOrder(props) {
-  const { content, orders, show, onHide, img_momo } = props;
+  const { content, orders, show, onHide, imgMomo } = props;
   return (
     <Modal
       size="lg"
@@ -82,7 +82,7 @@ export default function ModalMyOrder(props) {
                           <img
                             className="payment_momo "
                             src={
-                              img_momo +
+                              imgMomo +
                               order.total +
                               "|Người đặt: " +
                               order.user_name +
